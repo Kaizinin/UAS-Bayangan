@@ -149,16 +149,6 @@ Jawaban akan berbeda pada setiap pemanggilan karena LLM bersifat non-determinist
 - `@EnableRetry` serta dependency `spring-retry` dan `spring-boot-starter-aop` diperlukan agar `@Retryable` dan `@Recover` berfungsi.
 - Test WireMock memakai API key palsu sehingga dapat dijalankan tanpa biaya.
 
-## Pemecahan masalah
-
-| Gejala | Penyebab / solusi |
-|---|---|
-| `Cannot find a Java installation ... languageVersion=17` | JDK 17 tidak terpasang. Pasang JDK 17, atau ubah blok `java { ... }` di `build.gradle` agar memakai JDK yang ada. |
-| Aplikasi gagal start di `openAiChatModel` | API key belum terbaca. Set `SPRING_AI_OPENAI_API_KEY` di terminal yang sama, lalu restart. |
-| `500 Internal Server Error` saat memanggil `/ask` | Lihat log di terminal aplikasi. Penyebab umum: `401` (key salah) atau `429` (saldo habis). |
-| `Port 8080 already in use` | Jalankan dengan `--args="--server.port=8081"`. |
-| Terminal berhenti di `EXECUTING` | Normal jika aplikasi sudah berjalan; kirim request dari terminal kedua. |
-
 ## Referensi
 
 - Walls, C. *Spring AI in Action*. Manning Publications.
