@@ -1,0 +1,20 @@
+digraph ch1 {
+  rankdir=BT; nodesep=0.6; ranksep=0.7;
+  node [shape=record, fontname="Helvetica", fontsize=11, style=filled, fillcolor="#FFFFFF"];
+  edge [fontname="Helvetica", fontsize=10];
+
+  BoardGameService [label="{«interface»\nBoardGameService|| + askQuestion(question: Question): Answer}", fillcolor="#EAF2FB"];
+  SpringAiBoardGameService [label="{SpringAiBoardGameService|- chatClient: ChatClient|+ SpringAiBoardGameService(builder: ChatClient.Builder)\l+ askQuestion(question: Question): Answer\l}"];
+  AskController [label="{AskController|- boardGameService: BoardGameService|+ AskController(service: BoardGameService)\l+ ask(question: Question): Answer\l}"];
+  Question [label="{«record»\nQuestion|+ question: String|}", fillcolor="#FFF6E0"];
+  Answer [label="{«record»\nAnswer|+ answer: String|}", fillcolor="#FFF6E0"];
+  ChatClient [label="{«Spring AI»\nChatClient|| + prompt(): ChatClientRequestSpec\l}", fillcolor="#E8F5E9"];
+  OpenAI [label="{«external»\nOpenAI REST API\n(/v1/chat/completions)}", shape=component, fillcolor="#F3E5F5"];
+
+  SpringAiBoardGameService -> BoardGameService [arrowhead=empty, style=dashed, label="implements"];
+  AskController -> BoardGameService [arrowhead=vee, label="uses (DI)"];
+  SpringAiBoardGameService -> ChatClient [arrowhead=vee, label="uses"];
+  ChatClient -> OpenAI [arrowhead=vee, label="HTTP POST"];
+  BoardGameService -> Question [arrowhead=vee, style=dotted, label="param"];
+  BoardGameService -> Answer [arrowhead=vee, style=dotted, label="returns"];
+}

@@ -1,0 +1,30 @@
+digraph ch2 {
+  rankdir=BT; nodesep=0.3; ranksep=0.8;
+  node [shape=record, fontname="Helvetica", fontsize=11, style=filled, fillcolor="#FFFFFF"];
+  edge [fontname="Helvetica", fontsize=10];
+
+  BoardGameService [label="{«interface»\nBoardGameService|| + askQuestion(q: Question): Answer}", fillcolor="#EAF2FB"];
+  SpringAiBoardGameService [label="{SpringAiBoardGameService\n@Profile(\"!evaluating\")|- chatClient: ChatClient|+ askQuestion(q: Question): Answer\l}"];
+  Self [label="{SelfEvaluatingBoardGameService\n@Profile(\"evaluating\")|- chatClient: ChatClient\l- evaluator: RelevancyEvaluator\l|+ askQuestion(q: Question): Answer «@Retryable»\l+ recover(e: AnswerNotRelevantException):\l      Answer «@Recover»\l- evaluateRelevancy(q: Question, text: String): void\l}"];
+  Exc [label="{AnswerNotRelevantException|| + AnswerNotRelevantException(\l      question: String, answer: String)\l}", fillcolor="#FDECEA"];
+  RTE [label="{RuntimeException}", fillcolor="#EEEEEE"];
+  Evaluator [label="{«interface»\nEvaluator|| + evaluate(request: EvaluationRequest):\l      EvaluationResponse\l# doGetSupportingData(request): String\l}", fillcolor="#EAF2FB"];
+  Rel [label="{RelevancyEvaluator|- chatClientBuilder: Builder|+ evaluate(request: EvaluationRequest):\l      EvaluationResponse\l}", fillcolor="#E8F5E9"];
+  Fact [label="{FactCheckingEvaluator|- chatClientBuilder: Builder|+ evaluate(request: EvaluationRequest):\l      EvaluationResponse\l}", fillcolor="#E8F5E9"];
+  Req [label="{EvaluationRequest|- userText: String\l- responseContent: String\l|}", fillcolor="#FFF6E0"];
+  Resp [label="{EvaluationResponse|- pass: boolean\l- feedback: String\l|+ isPass(): boolean\l}", fillcolor="#FFF6E0"];
+  Tests [label="{SpringAiBoardGame-\nServiceTests|- relevancyEvaluator\l- factCheckingEvaluator\l|+ evaluateRelevancy(): void\l+ evaluateFactualAccuracy(): void\l}", fillcolor="#F3E5F5"];
+
+  SpringAiBoardGameService -> BoardGameService [arrowhead=empty, style=dashed, label="implements"];
+  Self -> BoardGameService [arrowhead=empty, style=dashed, label="implements"];
+  Exc -> RTE [arrowhead=empty, label="extends"];
+  Rel -> Evaluator [arrowhead=empty, style=dashed, label="implements"];
+  Fact -> Evaluator [arrowhead=empty, style=dashed, label="implements"];
+  Self -> Rel [arrowhead=vee, label="uses"];
+  Self -> Exc [arrowhead=vee, style=dashed, label="throws"];
+  Tests -> Rel [arrowhead=vee, label="uses"];
+  Tests -> Fact [arrowhead=vee, label="uses"];
+  Tests -> BoardGameService [arrowhead=vee, label="tests"];
+  Evaluator -> Req [arrowhead=vee, style=dotted];
+  Evaluator -> Resp [arrowhead=vee, style=dotted];
+}
