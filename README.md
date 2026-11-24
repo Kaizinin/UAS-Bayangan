@@ -6,7 +6,6 @@ Tugas mata kuliah **Rekayasa Perangkat Lunak Lanjut**, berdasarkan buku *Spring 
 |---|---|
 | Nama | Ryan Fazli Mawla |
 | NIM | 12409011010016 |
-| Dosen | rizalbroer@uinjkt.ac.id |
 
 ## Deskripsi
 
